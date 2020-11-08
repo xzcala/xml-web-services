@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!--
+name: Janry Basa
+pawprint: jcbrzf
+date: 4/8/2018
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Challenge 9</title>
+    <style>
+        
+        body {
+            font-family: helvetica, arial, sans-serif;
+        }
+        
+        ul {
+            list-style-position: inside;
+            padding-left:0;
+        }
+        
+        #digivice {
+            position: relative;
+            background-image: url(digivice.png);
+            width: 900px;
+            height: 784px;
+            margin: 15px auto;
+        }
+        
+        #infoBox {
+            position: absolute;
+            top: 260px;
+            left: 330px;
+            font-size: 12px;
+			position: absolute;
+            height: 250px;
+            width: 230px;
+            padding: 5px;
+		}
+        
+        .container{
+            border-radius: 25px;
+            margin: auto;
+            width: 60%;
+            border: 3px solid black;
+            padding: 10px;
+            text-align: center;
+            background-color: #CAF2F4;
+        }
+        
+        
+        button {
+            border-radius: 75px;
+            width:150px;
+            color: white;
+            background-color: #3C54AE;
+            border: 2px solid black;
+            font: inherit;
+            line-height: 3;
+            margin: 5px;
+            padding: 20px;
+            text-shadow: 0 0 3px #FF0000;
+        }       
+        
+    </style>
+    <script>
+        function home(){
+            document.getElementById("infoBox").innerHTML = "<p>Loading...</p>";
+            var xmlHttp=new XMLHttpRequest();
+            xmlHttp.onload=function(){
+                if(xmlHttp.status==200){
+                    document.getElementById("infoBox").innerHTML=xmlHttp.responseText;
+                }
+            }
+                
+            xmlHttp.open("GET","http://ec2-54-158-64-221.compute-1.amazonaws.com/Challenge9/webService.php?content=home",true);
+            xmlHttp.send();
+        }
+        
+           
+        function digiLevel() {
+            document.getElementById("infoBox").innerHTML = "<p>Loading...</p>";
+            var xmlHttp = new XMLHttpRequest();
+            
+            xmlHttp.onload = function() {
+                if (xmlHttp.status == 200) {
+                    var response = xmlHttp.responseText;
+                    
+                    response = JSON.parse(response);
+                    
+                    var output = "<ul>";
+                
+                    var infoBox = document.getElementById("infoBox");
+                    
+                    for(i in response.digivice.digimon){
+                        
+                        var check = response.digivice.digimon[i].level.charAt(0);
+                        
+                        if(check=='A' || check=='E' || check=='I' || check =='O' ||check =='U'){
+                        output+="<li>"+response.digivice.digimon[i].name + " is an " + response.digivice.digimon[i].level+"</li>";
+                        }
+                        else{
+                        output+="<li>"+response.digivice.digimon[i].name + " is a " + response.digivice.digimon[i].level+"</li>";
+                        }
+                    }
+                    
+                    infoBox.innerHTML=output+"</ul>";
+                    
+                }
+            }
+            
+            xmlHttp.open("GET", "http://ec2-54-158-64-221.compute-1.amazonaws.com/Challenge9/webService.php?content=data&format=json", true);
+            xmlHttp.send();
+            
+        }
+        
+        function digiEvolve() {
+            document.getElementById("infoBox").innerHTML = "<p>Loading...</p>";
+            var xmlHttp = new XMLHttpRequest();
+            
+            xmlHttp.onload = function() {
+                if (xmlHttp.status == 200) {
+                    var response = xmlHttp.responseText;
+                    
+                    response = JSON.parse(response);
+                    
+                    var output = "<ul>";
+                
+                    var infoBox = document.getElementById("infoBox");
+                    
+                    for(i in response.digivice.digimon){
+                        
+                        output+="<li>"+response.digivice.digimon[i].name + " evolves into " + response.digivice.digimon[i].evolution+"</li>";
+                        
+                    }
+                    
+                    infoBox.innerHTML=output+"</ul>";
+                    
+                }
+            }
+            
+            xmlHttp.open("GET", "http://ec2-54-158-64-221.compute-1.amazonaws.com/Challenge9/webService.php?content=data&format=json", true);
+            xmlHttp.send();
+            
+        }
+        
+        function digiType() {
+                 
+            document.getElementById("infoBox").innerHTML = "<p>Loading...</p>";
+            var xmlHttp = new XMLHttpRequest();
+            
+            xmlHttp.onload = function() {
+                if (xmlHttp.status == 200) {
+                    var xmlDoc = xmlHttp.responseXML;
+                
+                    var output = "<ul>";
+                
+                    var names = xmlDoc.getElementsByTagName("name");
+                    var types = xmlDoc.getElementsByTagName("type");
+                
+                    for(var i=0;i<names.length;i++){
+                        var check = types[i].childNodes[0].nodeValue.charAt(0);
+                        
+                        
+                        if(check=='A' || check=='E' || check=='I' || check =='O' ||check =='U'){
+                        output+="<li>"+names[i].childNodes[0].nodeValue + " is an " + types[i].childNodes[0].nodeValue + "</li>";
+                        }
+                        else{
+                        output+="<li>"+names[i].childNodes[0].nodeValue + " is a " + types[i].childNodes[0].nodeValue + "</li>";
+                        }                    
+                    }
+                
+                document.getElementById("infoBox").innerHTML=output+"</ul>";
+				
+                }
+		  } 
+		
+		xmlHttp.open("GET", "http://ec2-54-158-64-221.compute-1.amazonaws.com/Challenge9/webService.php?content=data&format=xml", true);
+		xmlHttp.send();
+        
+        }
+        
+        function digiAll() {
+                 
+            document.getElementById("infoBox").innerHTML = "<p>Loading...</p>";
+            var xmlHttp = new XMLHttpRequest();
+            
+            xmlHttp.onload = function() {
+                if (xmlHttp.status == 200) {
+                    var xmlDoc = xmlHttp.responseXML;
+                
+                    var output = "<ul>";
+                
+                    var names = xmlDoc.getElementsByTagName("name");
+                
+                    for(var i=0;i<names.length;i++){
+                        //output+="<li>"+names[i].childNodes[0].nodeValue + " is my " + (i+1) + " Digimon </li>";
+                        if(i==0){
+                            output+="<li>"+names[i].childNodes[0].nodeValue + " is my " + (i+1) + "st Digimon </li>";
+                        }
+                        else if(i==1){
+                            output+="<li>"+names[i].childNodes[0].nodeValue + " is my " + (i+1) + "nd Digimon </li>";
+                        }
+                        else if(i==2){
+                            output+="<li>"+names[i].childNodes[0].nodeValue + " is my " + (i+1) + "rd Digimon </li>";
+                        }
+                        else{
+                            output+="<li>"+names[i].childNodes[0].nodeValue + " is my " + (i+1) + "th Digimon </li>";
+                        }
+                }
+                
+                document.getElementById("infoBox").innerHTML=output+"</ul>";
+				
+                }
+		  } 
+		
+		xmlHttp.open("GET", "http://ec2-54-158-64-221.compute-1.amazonaws.com/Challenge9/webService.php?content=data&format=xml", true);
+		xmlHttp.send();
+        
+        }
+        
+	</script>
+</head>
+<body>
+    <div id="digivice">
+        <div id="infoBox">
+        
+        </div>
+    </div>
+    <div class="container">
+        <button type="button" onclick="home()">Home</button>
+        <button type="button" onclick="digiLevel()">DigiLevel</button>
+        <button type="button" onclick="digiEvolve()">DigiEvolve</button>
+        <button type="button" onclick="digiType()">DigiType</button>
+        <button type="button" onclick="digiAll()">DigiAll</button>
+    </div>
+</body>
+</html>
